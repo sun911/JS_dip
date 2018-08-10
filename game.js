@@ -134,10 +134,10 @@ class Level {
       throw new Error('Необходимо передать объект типа Vector');
     }
 
-    let left = Math.floor(position.x);
-    let top = Math.floor(position.y);
-    let right = Math.ceil(position.x + size.x);
-    let bottom = Math.ceil(position.y + size.y);
+    const left = Math.floor(position.x),
+    	top = Math.floor(position.y),
+    	right = Math.ceil(position.x + size.x),
+    	bottom = Math.ceil(position.y + size.y);
 
     if (left < 0 || right > this.width || top < 0) {
       return 'wall';
@@ -266,7 +266,7 @@ class LevelParser {
 
   createGrid(plan) {
     return plan.reduce((memo, el) => {
-      const line = el.split('').map(el => this.obstacleFromSymbol(el));
+      const line = el.split('').map(this.obstacleFromSymbol);
       memo.push(line);
       return memo;
     }, []);
@@ -278,10 +278,11 @@ class LevelParser {
       const line = plan[y].split('');
       for (let x = 0; x < line.length; x++) {
         const symbol = this.dictionary[line[x]];
-        if (typeof symbol === 'function') {
-          const actor = new symbol(new Vector(x, y));
-          if (actor instanceof Actor) {
-            actors.push(actor);
+        if (!(typeof symbol === 'function')){continue;} 
+	  else{
+	    const actor = new symbol(new Vector(x, y));
+            if (actor instanceof Actor) {
+              actors.push(actor);
           }
         }
       }
